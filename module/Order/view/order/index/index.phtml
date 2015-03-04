@@ -1,0 +1,5 @@
+<?php echo $this->paginationcontrol($this->paginator,null,'paginator/item.phtml');?>
+<?php foreach ($orders as $order) : ?>
+<p><?php echo $order->order_id;?>  <?php echo $order->order_sn;?></p>
+<?php endforeach;?>
+<?php echo $this->paginationcontrol($this->paginator,null,'paginator/item.phtml');?>
