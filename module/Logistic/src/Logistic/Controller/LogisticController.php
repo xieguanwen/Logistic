@@ -1,6 +1,7 @@
 <?php
 namespace Logistic\Controller;
 
+use Logistic\Model\LogisticXml;
 use Zend\Mvc\Controller\AbstractActionController;
 use Logistic\Model\CommandTransport;
 use Logistic\Model\Receiver;
@@ -56,10 +57,10 @@ class LogisticController extends AbstractActionController {
         if ($this->getRequest()->getQuery('order_sn')) {
             $orderInfo = $orderInfoTable->fetchOne(array('order_sn'=>$this->getRequest()->getQuery('order_sn')));
             $result = $this->commandTransport->sendOrder($orderInfo, $orderGoodsTable);
-            if ($result == 0) {
+            if ($result) {
             	echo '发送成功';
             } else {
-                echo $result;
+                echo '没有发送成功,请查看日志';
             }
         }
         exit;
@@ -114,5 +115,15 @@ class LogisticController extends AbstractActionController {
         $this->commandTransport->batchSendUpdateOrder($updateLogisticTable, $orderInfoTable, $orderGoodsTable);
         exit;
     }
-        
+
+
+    public function testxmlAction(){
+        $stringXml = '<?xml version="1.0" encoding="utf-8" ?><TradeOrdersNew><trade_orders_response><trade><created>2012-8-11 18:46:19</created><tid>DD00006772</tid></trade></trade_orders_response></TradeOrdersNew>';
+        $stringXml = '<?xml version="1.0" encoding="utf-8" ?><TradeOrdersNew> <ERROR>itemsns:ECS000032不存在,或者已经停用</ERROR></TradeOrdersNew>';
+        $logisticXml = new LogisticXml();
+        $array = $logisticXml->getTid($stringXml);
+//        print_r($array['trade_orders_response']['trade']['tid']);
+        print_r($array['ERROR']);
+        exit(0);
+    }
 }

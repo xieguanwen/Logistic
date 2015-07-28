@@ -14,13 +14,11 @@ class Sender {
     private $curl;
 //     const HOST = '113.105.67.138';
 //     const PORT = '8088';
-    const HOST = '113.105.67.139';
-    const PORT = '8088';
+    const HOST = '121.199.173.254';
+    const PORT = '30002';
     const SCHEME = 'http';
-    const SHORT_PATH = '/xyapi/api/service/wmc/order/';
-    const TOKEN = 'uMbYz4Dtfhj7yeokoZaMAuUUMm+h+v/h/vgnjZHyWMC1';
-    const CUSTOMERID = '143631';
-    const LANGUAGE = 'zh_CN';
+    const SHORT_PATH = '/xyhwcgerp/data.dpk';
+    const TOKEN = '0527CFFEA6504311B86858993CF0F1F1';
     
     public function __construct(){
         $this->uri = new Uri();
@@ -38,17 +36,41 @@ class Sender {
      * curl_setopt($ch,CURLOPT_POSTFIELDS,$data);
      * @param string $jsonData
      * @param string $methodName
+     * @param string $method
+     * @param array $headers
      */
-    public function send($jsonData,$methodName){
+    public function send($jsonData,$methodName,$method = 'POST', $headers = null){
         $this->setUrl($methodName);
 //         print_r($this->uri->toString());exit;
         $this->client->setUri($this->uri->toString());
-        $this->client->setMethod('POST');
-        $this->client->setHeaders(array('Content-Type'=>'application/json'));
+        $this->client->setMethod($method);
+        if($headers !== null) $this->client->setHeaders($headers); // $headers = array('Content-Type'=>'application/json')
         $this->client->setRawBody($jsonData);
         $response = $this->client->send();
 //         print_r($response->getBody());exit;
         return $this->analysisOfData($response);
+    }
+
+    /**
+     * @param array $param
+     * @param string $methodName
+     * @param string $method
+     * @param null $headers
+     * @return \Zend\Http\Response
+     */
+    public function sendParam($param,$methodName,$method = 'POST', $headers = null){
+        $this->setUrl($methodName);
+        $this->client->setUri($this->uri->toString());
+        $this->client->setMethod($method);
+        if($headers !== null) $this->client->setHeaders($headers); // $headers = array('Content-Type'=>'application/json')
+        if($method == 'POST'){
+            $this->client->setParameterPost($param);
+        } else {
+            $this->client->setParameterGet($param);
+        }
+        $response = $this->client->send();
+//         print_r($response->getBody());exit;
+        return $response;
     }
     
     /**
@@ -60,8 +82,8 @@ class Sender {
         $this->uri  ->setHost(self::HOST)
                     ->setScheme(self::SCHEME)
                     ->setPort(self::PORT)
-                    ->setPath(self::SHORT_PATH.$methodName)
-                    ->setQuery(array('customerId'=>self::CUSTOMERID,'token'=>self::TOKEN,'language'=>self::LANGUAGE))
+                    ->setPath(self::SHORT_PATH)
+                    ->setQuery(array('method'=>$methodName,'appkey'=>self::TOKEN))
                     ;
         return $this;
     }
@@ -89,6 +111,7 @@ class Sender {
      */
     public function getClient(){
         return $this->client;
+
     }
     
     

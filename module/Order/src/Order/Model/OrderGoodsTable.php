@@ -39,7 +39,7 @@ class OrderGoodsTable extends Table
 
     /**
      *
-     * @param int $orderId            
+     * @param int $orderId
      * @return \ArrayObject
      */
     public function getOrderGoodsByOrderId($orderId)
@@ -57,7 +57,7 @@ class OrderGoodsTable extends Table
         // 'artist' => $album->artist,
         // 'title' => $album->title,
         // );
-        
+
         // $id = (int) $album->id;
         // if ($id == 0) {
         // $this->tableGateway->insert($data);

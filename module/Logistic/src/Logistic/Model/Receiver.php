@@ -1,6 +1,7 @@
 <?php
 namespace Logistic\Model;
 
+use Order\Model\Common;
 use Order\Model\OrderInfo;
 use Order\Model\OrderGoodsTable;
 use Zend\Json\Json;
@@ -35,38 +36,29 @@ class Receiver
      * 发送订单数据处理
      * @param OrderInfo $orderInfo
      * @param OrderGoodsTable $orderGoodsTable
-     * @return string
+     * @return array
      */
     public function sendOrderData(OrderInfo $orderInfo,OrderGoodsTable $orderGoodsTable){
-        $dataObject = new \stdClass();
-        
-        $dataObject->businessMemo = $orderInfo->postscript.'#####'.$orderInfo->shipping_name.'#####'.$orderInfo->best_time;
-        
-        $dataObject->receiveOrderTime = date('Y-m-d H:i:s',$orderInfo->pay_time);
-        
-        $dataObject->custVoucherId = $orderInfo->order_sn;
-//         $dataObject->customerCorpId = 'YXGWCS';// @todo 店铺编号
-        $dataObject->customerCorpId = 'YXGW';
-        $dataObject->receiver = $orderInfo->consignee;
-        $dataObject->receiverContact = $orderInfo->consignee;
-        $dataObject->receiverContactTel = $orderInfo->mobile;
-        $zipcode = $orderInfo->zipcode;
-        if (empty($zipcode)) {
-        	$dataObject->receiverPostcode = '518000';
-        } else {
-            $dataObject->receiverPostcode = $orderInfo->zipcode;
-        }
-        $dataObject->receiverAddress = $this->getAddress($orderInfo->province,$orderInfo->city,$orderInfo->district);//合成地址
-        $dataObject->receiverStreet = $orderInfo->address;
-        $dataObject->transpostSum = $orderInfo->shipping_fee;
-        $dataObject->salesModel = '1'; //销售模式 1：零售,2：代发3：批发,4：自提
-        $dataObject->orderSource = '17';        
-        $goods = $orderGoodsTable->fetchAll(array('order_id'=>$orderInfo->order_id));
+        $data = array();
+        $productTable = $this->controller->getServiceLocator()->get('Order\Model\ProductTable');
+        $shippingTable = $this->controller->getServiceLocator()->get('Order\Model\ShippingTable');
 
-        $dataObject->items = $this->mergeArray($goods);
-//         print_r($dataObject);exit;
-//         return preg_replace("#\\\u([0-9a-f]{4})#ie", "iconv('UCS-2BE', 'UTF-8', pack('H4', '\\1'))", $this->json->encode($dataObject));
-        return json_encode($dataObject,JSON_UNESCAPED_UNICODE);
+        $data['mail'] = 'hyly0922';
+        $data['itemsns'] = Common::getItemsns($orderGoodsTable,$productTable,$orderInfo->order_id);
+//        $data['itemsns'] = 'ICNL600';
+        $data['prices'] = Common::getPrices($orderGoodsTable,$orderInfo->order_id);
+        $data['nums'] = Common::getNumbers($orderGoodsTable,$orderInfo->order_id);
+        $data['receiver_name'] = $orderInfo->consignee;
+        $data['receiver_address'] = $orderInfo->address;
+        $data['receiver_state'] = $this->getRegionName($orderInfo->province);
+        $data['receiver_city'] = $this->getRegionName($orderInfo->city);
+        $data['receiver_district'] = $this->getRegionName($orderInfo->district);
+        $data['logistics_type'] = strtoupper(Common::getShippingCode($shippingTable,$orderInfo->shipping_id));
+        $data['outer_tid'] = $orderInfo->order_sn;
+        $data['outer_shop_code'] = "yxgw";
+        $data['receiver_mobile'] = $orderInfo->mobile;
+        $data['pay_datatimes'] = date("Y-m-d",$orderInfo->pay_time);
+        return $data;
     }
     
     /**
@@ -146,6 +138,12 @@ class Receiver
     		$returnArray[] = $itemObject;
     	}
     	return $returnArray;
+    }
+
+    private function getRegionName($regionId){
+        $regionTable = $this->controller->getServiceLocator()->get("Order\Model\RegionTable");
+        $row = $regionTable->fetch($regionId);
+        return $row->region_name;
     }
 }
 

@@ -21,7 +21,8 @@ class IndexController extends AbstractActionController
 
     public function indexAction()
     {
-        phpinfo();exit;
+        exit(0);
+//        phpinfo();exit;
 //         $config = new SessionConfig();
 //         $config->setOptions(array(
 //     		'phpSaveHandler' => 'memcache',

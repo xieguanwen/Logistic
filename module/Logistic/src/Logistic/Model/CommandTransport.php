@@ -15,9 +15,10 @@ class CommandTransport {
     private $receiver;
     private $sender;
     private $eventManager;
+    private $xml;
     const SEND_COUNT = 4;
     const INVALID_ORDER = 'deposeSmSalerOrder';
-    const SEND_ORDER = 'addSmSalerOrder';
+    const SEND_ORDER = 'ecerp.trade.add_order_new';
     const SEARCH_SHIPPING_FINISH = 'searchSmSalerOrderFinish';
     
     public function __construct(Receiver $receiver,Sender $sender,EventManager $eventManager){
@@ -28,6 +29,7 @@ class CommandTransport {
         $this->log('sendOrder');
         $this->log('receiveOrder');
         $this->log('receiveOrderError');
+        $this->xml = new LogisticXml();
     }
     
     /**
@@ -50,8 +52,13 @@ class CommandTransport {
      * 发送订单信息
      */
     public function sendOrder(OrderInfo $orderInfo,OrderGoodsTable $orderGoodsTable){
-        $result = $this->sender->send($this->receiver->sendOrderData($orderInfo,$orderGoodsTable), self::SEND_ORDER);
-        $this->eventManager->trigger('sendOrder',null,array($result,$orderInfo));
+        $response = $this->sender->sendParam($this->receiver->sendOrderData($orderInfo,$orderGoodsTable), self::SEND_ORDER,'GET');
+        if($this->xml->getTid($response->getBody())){
+            $result = true;
+        } else {
+            $this->eventManager->trigger('sendOrder',null,array($this->xml->getException()->getMessage(),$this->xml->getException()->getCode()));
+            $result = false;
+        }
         return $result;
     }
     
@@ -99,7 +106,7 @@ class CommandTransport {
             $orderInfo = $orderInfoTable->fetch($sendOrder->order_id);
             //$this->eventManager->trigger('sendOrder',null,array($sendOrder,$orderInfo->order_sn));
         	$result = $this->sendOrder($orderInfo, $orderGoodsTable);
-        	if((int)$result == 0){
+        	if($result){
         	    //save 发送成功
         		$sendOrder->status = 1;
         		$sendOrder->send_count = $sendOrder->send_count + 1;

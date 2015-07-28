@@ -8,12 +8,12 @@ class Log
 {
     private static $log; 
     
-    protected function instance(){
+    protected static function instance(){
         if(self::$log == null){
             self::$log = new Logger();
         }
         return self::$log;
-    } 
+    }
     
     public static function firePhp($message){
         $log = self::instance();
