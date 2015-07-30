@@ -36,10 +36,31 @@ class LogisticXml {
         $this->exception = new \Logistic\Exception\Xml();
     }
 
+    /**
+     * @param $stringXml
+     * @return string|null
+     */
     public function getTid($stringXml){
         $arrayXml = $this->readerXml->fromString($stringXml);
         if(isset($arrayXml['trade_orders_response']['trade']['tid']) && strlen($arrayXml['trade_orders_response']['trade']['tid'])>0){
             return $arrayXml['trade_orders_response']['trade']['tid'];
+        } else {
+            if(isset($arrayXml['ERROR']))
+                $this->exception->setMessage($arrayXml['ERROR'])->setCode(10001);
+            else
+                $this->exception->setMessage('其他错误')->setCode(10001);
+            return null;
+        }
+    }
+
+    /**
+     * @param $stringXml
+     * @return string|null
+     */
+    public function getWldh($stringXml){
+        $arrayXml = $this->readerXml->fromString($stringXml);
+        if(isset($arrayXml['order_logistics']['order_logistic']['wldh']) && strlen($arrayXml['order_logistics']['order_logistic']['wldh'])>0){
+            return $arrayXml['order_logistics']['order_logistic']['wldh'];
         } else {
             if(isset($arrayXml['ERROR']))
                 $this->exception->setMessage($arrayXml['ERROR'])->setCode(10001);

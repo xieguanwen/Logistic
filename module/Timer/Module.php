@@ -9,9 +9,10 @@ use Timer\Model\ReceiveOrderTable;
 use Timer\Model\ReceiveOrder;
 use Timer\Model\UpdateLogisticTable;
 use Timer\Model\UpdateLogistic;
+use Zend\ModuleManager\Feature\ControllerProviderInterface;
 use Zend\Mvc\MvcEvent;
 
-class Module
+class Module implements ControllerProviderInterface
 { 
     // getAutoloaderConfig() and getConfig() methods here
     public function getAutoloaderConfig()
@@ -76,5 +77,14 @@ class Module
             )
             
         );
+    }
+
+    public function getControllerConfig(){
+        return [
+            'invokables' => [
+                'Timer\Controller\Timer' => 'Timer\Controller\TimerController',
+                'Timer\Controller\Test' => 'Timer\Controller\TestController'
+            ]
+        ];
     }
 }

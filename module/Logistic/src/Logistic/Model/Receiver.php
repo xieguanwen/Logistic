@@ -31,7 +31,18 @@ class Receiver
         $object->custVoucherId = $orderInfo->order_sn;
         return json_encode($object,JSON_UNESCAPED_UNICODE);
     }
-    
+
+    /**
+     * 发送订单数据处理
+     * @param OrderInfo $orderInfo
+     * @return string
+     */
+    public function receiveOrderData(OrderInfo $orderInfo){
+        $data = [];
+        $data['condition'] = 'outer_tid='.$orderInfo->order_id;
+        return $data;
+    }
+
     /**
      * 发送订单数据处理
      * @param OrderInfo $orderInfo

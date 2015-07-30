@@ -1,10 +1,10 @@
 <?php
 return array(
     'controllers' => array(
-        'invokables' => array(
-            'Timer\Controller\Timer' => 'Timer\Controller\TimerController',
-            'Timer\Controller\Test' => 'Timer\Controller\TestController'
-        )
+//        'invokables' => array(
+//            'Timer\Controller\Timer' => 'Timer\Controller\TimerController',
+//            'Timer\Controller\Test' => 'Timer\Controller\TestController'
+//        )
     ),
     
     // The following section is new and should be added to your file

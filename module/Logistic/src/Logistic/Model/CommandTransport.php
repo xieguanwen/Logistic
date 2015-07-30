@@ -2,7 +2,8 @@
 namespace Logistic\Model;
 
 use Order\Model\OrderInfo;
-use Timer\Model\UpdateLogistic;
+use Timer\Model\ReceiveOrder;
+use Timer\Model\ReceiveOrderTable;
 use Zend\EventManager\EventManager;
 use Common\Model\Log;
 use Zend\Db\ResultSet\ResultSet;
@@ -11,6 +12,8 @@ use Timer\Model\UpdateLogisticTable;
 use Order\Model\OrderGoodsTable;
 use Timer\Model\SendOrderTable;
 use Timer\Model\SendOrder;
+use Zend\Http\Client;
+
 class CommandTransport {
     private $receiver;
     private $sender;
@@ -31,12 +34,23 @@ class CommandTransport {
         $this->log('receiveOrderError');
         $this->xml = new LogisticXml();
     }
-    
+
     /**
      * 接收发货订单信息
+     *
+     * @param OrderInfo $orderInfo
+     * @return bool
      */
-    public function receiveShipOrder(){
-        
+    public function receiveOrder(OrderInfo $orderInfo){
+        $response = $this->sender->sendParam($this->receiver->receiveOrderData($orderInfo),'ecerp.trade.get');
+        if($this->xml->getWldh($response->getBody())){
+            $result = true;
+        } else {
+            $this->eventManager->trigger('sendOrderError',null,array($this->xml->getException()->getMessage(),$this->xml->getException()->getCode()));
+            $result = false;
+        }
+        return $result;
+
     }
     
     /**
@@ -96,12 +110,20 @@ class CommandTransport {
         	
         }
     }
-    
+
     /**
      * 批量发送订单信息
+     *
+     * @param SendOrderTable $sendOrderTable
+     * @param OrderInfoTable $orderInfoTable
+     * @param OrderGoodsTable $orderGoodsTable
+     * @throws \Exception
      */
     public function batchSendOrder(SendOrderTable $sendOrderTable,OrderInfoTable $orderInfoTable,OrderGoodsTable $orderGoodsTable){
+
         $resultSet = $sendOrderTable->fetchAll(array('status=0'));
+        $client = new Client();
+
         foreach ($resultSet as $sendOrder) {
             $orderInfo = $orderInfoTable->fetch($sendOrder->order_id);
             //$this->eventManager->trigger('sendOrder',null,array($sendOrder,$orderInfo->order_sn));
@@ -120,6 +142,7 @@ class CommandTransport {
         			$orderInfoTable->save($orderInfo);
         		} catch (Exception $e) {
         		}
+
         	} else {
         		$row = $orderGoodsTable->fetchAll(array('order_id'=>$sendOrder->order_id));
         		$content = print_r(iterator_to_array($row),true);
@@ -133,7 +156,51 @@ class CommandTransport {
         		$sendOrderTable->save($sendOrder);
         	}
         }
-        
+    }
+
+    /**
+     * @param ReceiveOrderTable $receiveOrderTable
+     * @param OrderInfoTable $orderInfoTable
+     * @throws \Exception
+     */
+    public function batchReceiveOrder(ReceiveOrderTable $receiveOrderTable,OrderInfoTable $orderInfoTable){
+        $resultSet = $receiveOrderTable->fetchAll(array('status=0'));
+        $client = new Client();
+        foreach ($resultSet as $receiveOrder) {
+            $orderInfo = $orderInfoTable->fetch($receiveOrder->order_id);
+            $result = $this->receiveOrder($orderInfo,$receiveOrderTable);
+            if($result){
+                //改变发货状态
+                $orderInfo->shipping_status = 3;
+                $orderInfoTable->save($orderInfo);
+
+                //save receive success
+                $receiveOrder->status = 1;
+                $receiveOrder->count = $receiveOrder->count + 1;
+                $receiveOrderTable->save($receiveOrder);
+
+                try {
+                    //get kuaidi information
+                    $client->setUri('http://www.xiaolajiao.com/kuaidi.php?com='.$receiveOrder->order_id);
+                    $client->setMethod('GET');
+                    $response = $client->send();
+
+                    //发送短信
+                    $msg = "亲爱的用户，您的手机已经由{$orderInfo->shipping_name}发出，快递单号：{$orderInfo->invoice_no}，如有任何问题请联系客服4001665678，祝您生活愉快!【小辣椒】";
+                    $url = "http://www.xiaolajiao.com/sendsms.php?mobile={$orderInfo->mobile}&applicationkey=smskey&msg={$msg}";
+                    $client->setUri($url);
+                    $client->send();
+
+                } catch (Exception $e) {
+                    $this->eventManager->trigger('receiveOrderError',null,$e);
+                }
+            } else {
+                //save receive fault
+                $receiveOrder->count = $receiveOrder->count + 1;
+                $receiveOrderTable->save($receiveOrder);
+            }
+        }
+
     }
     
     /**
@@ -171,7 +238,7 @@ class CommandTransport {
      * @param SendOrderTable $sendOrderTable
      */
     public function sendOrderPretreatment(OrderInfoTable $orderInfoTable,SendOrderTable $sendOrderTable){
-    	$resultSet = $orderInfoTable->payedOrderInfo();
+    	$resultSet = $orderInfoTable->fetchAll(array("pay_status=2","pay_time>".(time()-3600*24)));
     	foreach ($resultSet as $row) {
     		if ($sendOrderTable->getSendOrderByOrderId($row->order_id) == null) {
     			$sendOrder = new SendOrder();
@@ -182,12 +249,31 @@ class CommandTransport {
     			$sendOrder->status = 0;
     			try {
     				$sendOrderTable->save($sendOrder);
-    			} catch (Exception $e) {
+    			} catch (\Exception $e) {
     			}
     		}
     	}
-    
-    
+    }
+
+    /**
+     * 预先的处理接收订单信息
+     *
+     * @param OrderInfoTable $orderInfoTable
+     * @param ReceiveOrderTable $receiveOrderTable
+     */
+    public function receiveOrderPretreatment(OrderInfoTable $orderInfoTable,ReceiveOrderTable $receiveOrderTable){
+        $resultSet = $orderInfoTable->fetchAll('pay_status=2','shipping_status=3','pay_time>'.(time()-3600*24));
+        foreach ($resultSet as $row) {
+            $receiveOrder = new ReceiveOrder();
+            $receiveOrder->order_id = $row->order_id;
+            $receiveOrder->order_sn = $row->order_sn;
+            $receiveOrder->count = 0;
+            $receiveOrder->status = 0;
+            try{
+                $receiveOrderTable->save($receiveOrder);
+            } catch (\Exception $e){
+            }
+        }
     }
     
     private function log($eventName){
