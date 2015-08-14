@@ -42,9 +42,10 @@ class CommandTransport {
      * @return bool
      */
     public function receiveOrder(OrderInfo $orderInfo){
-        $response = $this->sender->sendParam($this->receiver->receiveOrderData($orderInfo),'ecerp.trade.get');
-        if($this->xml->getWldh($response->getBody())){
-            $result = true;
+        $response = $this->sender->sendParam($this->receiver->receiveOrderData($orderInfo),'ecerp.sendorder.get');
+        $logisticNo = $this->xml->getWldh($response->getBody());
+        if($logisticNo){
+            $result = $logisticNo;
         } else {
             $this->eventManager->trigger('sendOrderError',null,array($this->xml->getException()->getMessage(),$this->xml->getException()->getCode()));
             $result = false;
@@ -168,10 +169,11 @@ class CommandTransport {
         $client = new Client();
         foreach ($resultSet as $receiveOrder) {
             $orderInfo = $orderInfoTable->fetch($receiveOrder->order_id);
-            $result = $this->receiveOrder($orderInfo,$receiveOrderTable);
-            if($result){
+            $invoiceNo = $this->receiveOrder($orderInfo,$receiveOrderTable);
+            if($invoiceNo !== false){
                 //改变发货状态
                 $orderInfo->shipping_status = 3;
+                $orderInfo->invoice_no = $invoiceNo;
                 $orderInfoTable->save($orderInfo);
 
                 //save receive success

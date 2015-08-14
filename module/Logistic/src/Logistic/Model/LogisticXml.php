@@ -59,8 +59,8 @@ class LogisticXml {
      */
     public function getWldh($stringXml){
         $arrayXml = $this->readerXml->fromString($stringXml);
-        if(isset($arrayXml['order_logistics']['order_logistic']['wldh']) && strlen($arrayXml['order_logistics']['order_logistic']['wldh'])>0){
-            return $arrayXml['order_logistics']['order_logistic']['wldh'];
+        if(isset($arrayXml['sendorders']['sendorder']['wldh']) && strlen($arrayXml['sendorders']['sendorder']['wldh'])>0){
+            return $arrayXml['sendorders']['sendorder']['wldh'];
         } else {
             if(isset($arrayXml['ERROR']))
                 $this->exception->setMessage($arrayXml['ERROR'])->setCode(10001);
