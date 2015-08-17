@@ -4,6 +4,7 @@ namespace Logistic\Model;
 use Order\Model\Common;
 use Order\Model\OrderInfo;
 use Order\Model\OrderGoodsTable;
+use Zend\Debug\Debug;
 use Zend\Json\Json;
 use Timer\Model\UpdateLogisticTable;
 use Timer\Model\UpdateLogistic;
@@ -39,7 +40,11 @@ class Receiver
      */
     public function receiveOrderData(OrderInfo $orderInfo){
         $data = [];
-        $data['condition'] = 'outer_tid='.$orderInfo->order_id;
+//        $data['condition'] = 'outer_tid='.$orderInfo->order_sn;
+//        $data['condition'] = 'DJBH='.$orderInfo->order_sn;
+//        $data['condition'] = "DJBH='DD00034320'";
+//        $data['condition'] = "lydh='2015081791966'";
+        $data['condition'] = "lydh='".$orderInfo->order_sn."'";
         return $data;
     }
 

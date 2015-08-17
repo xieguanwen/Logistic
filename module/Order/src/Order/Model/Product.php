@@ -16,6 +16,7 @@ class Product extends Entity {
     public $goods_attr;
     public $product_sn;
     public $product_number;
+    public $status;
 
     public function exchangeArray($data)
     {

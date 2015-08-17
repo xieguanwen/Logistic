@@ -77,7 +77,7 @@ class Module
 					$dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
 					$resultSetPrototype = new ResultSet();
 					$resultSetPrototype->setArrayObjectPrototype(new Product());
-					return new TableGateway('shouji_product', $dbAdapter, null, $resultSetPrototype);
+					return new TableGateway('shouji_products', $dbAdapter, null, $resultSetPrototype);
 				},
                 'Order\Model\RegionTable' => function ($sm)
                 {

@@ -42,7 +42,7 @@ class CommandTransport {
      * @return bool
      */
     public function receiveOrder(OrderInfo $orderInfo){
-        $response = $this->sender->sendParam($this->receiver->receiveOrderData($orderInfo),'ecerp.sendorder.get');
+        $response = $this->sender->sendParam($this->receiver->receiveOrderData($orderInfo),'ecerp.sendorder.get','GET');
         $logisticNo = $this->xml->getWldh($response->getBody());
         if($logisticNo){
             $result = $logisticNo;
@@ -68,6 +68,7 @@ class CommandTransport {
      */
     public function sendOrder(OrderInfo $orderInfo,OrderGoodsTable $orderGoodsTable){
         $response = $this->sender->sendParam($this->receiver->sendOrderData($orderInfo,$orderGoodsTable), self::SEND_ORDER,'GET');
+        print_r($response->getBody());
         if($this->xml->getTid($response->getBody())){
             $result = true;
         } else {
@@ -172,7 +173,7 @@ class CommandTransport {
             $invoiceNo = $this->receiveOrder($orderInfo,$receiveOrderTable);
             if($invoiceNo !== false){
                 //改变发货状态
-                $orderInfo->shipping_status = 3;
+                $orderInfo->shipping_status = 1;
                 $orderInfo->invoice_no = $invoiceNo;
                 $orderInfoTable->save($orderInfo);
 
@@ -264,8 +265,13 @@ class CommandTransport {
      * @param ReceiveOrderTable $receiveOrderTable
      */
     public function receiveOrderPretreatment(OrderInfoTable $orderInfoTable,ReceiveOrderTable $receiveOrderTable){
-        $resultSet = $orderInfoTable->fetchAll('pay_status=2','shipping_status=3','pay_time>'.(time()-3600*24));
+        $resultSet = $orderInfoTable->fetchAll(array('pay_status=2','shipping_status=3','pay_time>'.(time()-3600*24)));
         foreach ($resultSet as $row) {
+            try{
+                $receiveOrderTable->fetchOne(array('order_id'=>$row->order_id));
+                continue;
+            }catch (\Exception $e){
+            }
             $receiveOrder = new ReceiveOrder();
             $receiveOrder->order_id = $row->order_id;
             $receiveOrder->order_sn = $row->order_sn;

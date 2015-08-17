@@ -9,6 +9,8 @@
 namespace Order\Model;
 
 
+use Zend\Debug\Debug;
+
 class Common {
 
     /**
@@ -72,6 +74,7 @@ class Common {
 
     public static function getShippingCode(ShippingTable $shippingTable,$shippingId){
         $shippingCode = $shippingTable->fetch($shippingId);
-        return $shippingCode->shipping_code;
+        $shippingCodeArray = array('sf_express'=>'SF','ems'=>'EMS','yto'=>'YTO');
+        return $shippingCodeArray[$shippingCode->shipping_code];
     }
 }
