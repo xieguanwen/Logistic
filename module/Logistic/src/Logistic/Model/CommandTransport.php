@@ -243,7 +243,6 @@ class CommandTransport {
     public function sendOrderPretreatment(OrderInfoTable $orderInfoTable,SendOrderTable $sendOrderTable){
     	$resultSet = $orderInfoTable->fetchAll(array("pay_status=2","shipping_status=0","pay_time>".(time()-3600*24)));
     	foreach ($resultSet as $row) {
-            print_r($row);exit;
     		if ($sendOrderTable->getSendOrderByOrderId($row->order_id) == null) {
     			$sendOrder = new SendOrder();
     			$sendOrder->order_id = $row->order_id;
@@ -254,10 +253,11 @@ class CommandTransport {
     			try {
     				$sendOrderTable->save($sendOrder);
     			} catch (\Exception $e) {
+                    print_r($e->getTrace());exit;
     			}
     		}
     	}
-        print_r("sendOrderPretreatment is ok");exit;
+        print_r($resultSet->count());exit;
     }
 
     /**
