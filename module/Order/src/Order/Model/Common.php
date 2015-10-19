@@ -8,9 +8,6 @@
 
 namespace Order\Model;
 
-
-use Zend\Debug\Debug;
-
 class Common {
 
     /**
@@ -21,6 +18,30 @@ class Common {
      * @throws \Exception
      */
     public static function getItemsns(OrderGoodsTable $orderGoodsTable,ProductTable $productTable,$orderId){
+        $itemsns = '';
+
+        $orderGoodsAll = $orderGoodsTable->fetchAll(array('order_id'=>$orderId));
+        foreach($orderGoodsAll as $orderGoods){
+            if(intval($orderGoods->product_id)>0){
+                $product = $productTable->fetch($orderGoods->product_id);
+                $itemsns .= $product->product_sn . ',';
+            } else {
+                $itemsns .= $orderGoods->goods_sn . ',';
+            }
+        }
+
+        $itemsns = rtrim($itemsns,',');
+        return $itemsns;
+    }
+
+    /**
+     * @param OrderGoodsTable $orderGoodsTable
+     * @param ProductTable $productTable
+     * @param $orderId
+     * @return string
+     * @throws \Exception
+     */
+    public static function getSkusns(OrderGoodsTable $orderGoodsTable,ProductTable $productTable,$orderId){
         $itemsns = '';
 
         $orderGoodsAll = $orderGoodsTable->fetchAll(array('order_id'=>$orderId));

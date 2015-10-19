@@ -61,6 +61,7 @@ class Receiver
 
         $data['mail'] = 'hyly0922';
         $data['itemsns'] = Common::getItemsns($orderGoodsTable,$productTable,$orderInfo->order_id);
+        $data['skusns'] = Common::getSkusns($orderGoodsTable,$productTable,$orderInfo->order_id);
 //        $data['itemsns'] = 'ICNL600';
         $data['prices'] = Common::getPrices($orderGoodsTable,$orderInfo->order_id);
         $data['nums'] = Common::getNumbers($orderGoodsTable,$orderInfo->order_id);
