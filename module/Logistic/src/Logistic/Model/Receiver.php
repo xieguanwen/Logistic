@@ -60,7 +60,7 @@ class Receiver
         $shippingTable = $this->controller->getServiceLocator()->get('Order\Model\ShippingTable');
 
         $data['mail'] = 'hyly0922';
-        $data['itemsns'] = Common::getItemsns($orderGoodsTable,$productTable,$orderInfo->order_id);
+        $data['itemsns'] = Common::getItemsns($orderGoodsTable,$orderInfo->order_id);
         $data['skusns'] = Common::getSkusns($orderGoodsTable,$productTable,$orderInfo->order_id);
 //        $data['itemsns'] = 'ICNL600';
         $data['prices'] = Common::getPrices($orderGoodsTable,$orderInfo->order_id);

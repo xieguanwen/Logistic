@@ -17,17 +17,13 @@ class Common {
      * @return string
      * @throws \Exception
      */
-    public static function getItemsns(OrderGoodsTable $orderGoodsTable,ProductTable $productTable,$orderId){
+    public static function getItemsns(OrderGoodsTable $orderGoodsTable,$orderId){
         $itemsns = '';
 
         $orderGoodsAll = $orderGoodsTable->fetchAll(array('order_id'=>$orderId));
         foreach($orderGoodsAll as $orderGoods){
-            if(intval($orderGoods->product_id)>0){
-                $product = $productTable->fetch($orderGoods->product_id);
-                $itemsns .= $product->product_sn . ',';
-            } else {
+            if($orderGoods->is_real == 1)
                 $itemsns .= $orderGoods->goods_sn . ',';
-            }
         }
 
         $itemsns = rtrim($itemsns,',');
@@ -46,11 +42,9 @@ class Common {
 
         $orderGoodsAll = $orderGoodsTable->fetchAll(array('order_id'=>$orderId));
         foreach($orderGoodsAll as $orderGoods){
-            if(intval($orderGoods->product_id)>0){
+            if($orderGoods->is_real == 1){
                 $product = $productTable->fetch($orderGoods->product_id);
                 $itemsns .= $product->product_sn . ',';
-            } else {
-                $itemsns .= $orderGoods->goods_sn . ',';
             }
         }
 
@@ -68,7 +62,9 @@ class Common {
 
         $orderGoodsAll = $orderGoodsTable->fetchAll(array('order_id'=>$orderId));
         foreach($orderGoodsAll as $orderGoods){
-            $prices .= $orderGoods->goods_price . ',';
+            if($orderGoods->is_real == 1){
+                $prices .= $orderGoods->goods_price . ',';
+            }
         }
 
         $prices = rtrim($prices,',');
@@ -85,7 +81,9 @@ class Common {
 
         $orderGoodsAll = $orderGoodsTable->fetchAll(array('order_id'=>$orderId));
         foreach($orderGoodsAll as $orderGoods){
-            $numbers .= $orderGoods->goods_number . ',';
+            if($orderGoods->is_real == 1){
+                $numbers .= $orderGoods->goods_number . ',';
+            }
         }
 
         $numbers = rtrim($numbers,',');
