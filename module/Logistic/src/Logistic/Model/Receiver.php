@@ -67,7 +67,7 @@ class Receiver
         $data['nums'] = Common::getNumbers($orderGoodsTable,$orderInfo->order_id);
         $data['receiver_name'] = $orderInfo->consignee;
         $data['receiver_address'] = $orderInfo->address;
-        $data['receiver_state'] = $this->getRegionName($orderInfo->province);
+        $data['receiver_state'] = $this->replaceState($this->getRegionName($orderInfo->province));
         $data['receiver_city'] = $this->getRegionName($orderInfo->city);
         $data['receiver_district'] = $this->getRegionName($orderInfo->district);
         $data['logistics_type'] = strtoupper(Common::getShippingCode($shippingTable,$orderInfo->shipping_id));
@@ -163,10 +163,24 @@ class Receiver
     	return $returnArray;
     }
 
+    /**
+     * @param $regionId
+     * @return mixed
+     */
     private function getRegionName($regionId){
         $regionTable = $this->controller->getServiceLocator()->get("Order\Model\RegionTable");
         $row = $regionTable->fetch($regionId);
         return $row->region_name;
+    }
+
+    /**
+     * @param $state
+     * @return mixed
+     */
+    private function replaceState($state){
+        $state = str_replace('省','',$state);
+        $state = str_replace('市','',$state);
+        return $state;
     }
 }
 

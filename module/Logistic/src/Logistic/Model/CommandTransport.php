@@ -68,7 +68,6 @@ class CommandTransport {
      */
     public function sendOrder(OrderInfo $orderInfo,OrderGoodsTable $orderGoodsTable){
         $response = $this->sender->sendParam($this->receiver->sendOrderData($orderInfo,$orderGoodsTable), self::SEND_ORDER,'GET');
-        print_r($response->getBody());
         if($this->xml->getTid($response->getBody())){
             $result = true;
         } else {
