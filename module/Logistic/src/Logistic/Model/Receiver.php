@@ -75,12 +75,11 @@ class Receiver
         $data['outer_shop_code'] = "yxgw";
         $data['receiver_mobile'] = $orderInfo->mobile;
         $data['pay_datatimes'] = date("Y-m-d",$orderInfo->pay_time);
-        $data['pay_moneys'] = $orderInfo->order_amount;
+        $data['pay_moneys'] = $orderInfo->money_paid;
         $data['pay_codes'] = '001';
         $data['pay_trade_ids'] = ' ';
         $data['pay_accounts'] = ' ';
         $data['pay_memos'] = ' ';
-        print_r($data);exit;
         return $data;
     }
     
