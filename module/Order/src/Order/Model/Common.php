@@ -22,7 +22,7 @@ class Common {
 
         $orderGoodsAll = $orderGoodsTable->fetchAll(array('order_id'=>$orderId));
         foreach($orderGoodsAll as $orderGoods){
-            if($orderGoods->is_real == 1)
+            if($orderGoods->is_real == 1 && strtoupper(substr($orderGoods->goods_sn,0,5))!='AAAAA')
                 $itemsns .= $orderGoods->goods_sn . ',';
         }
 
@@ -42,7 +42,7 @@ class Common {
 
         $orderGoodsAll = $orderGoodsTable->fetchAll(array('order_id'=>$orderId));
         foreach($orderGoodsAll as $orderGoods){
-            if($orderGoods->is_real == 1){
+            if($orderGoods->is_real == 1 && strtoupper(substr($orderGoods->goods_sn,0,5))!='AAAAA'){
                 $product = $productTable->fetch($orderGoods->product_id);
                 $itemsns .= $product->product_sn . ',';
             }
@@ -62,7 +62,7 @@ class Common {
 
         $orderGoodsAll = $orderGoodsTable->fetchAll(array('order_id'=>$orderId));
         foreach($orderGoodsAll as $orderGoods){
-            if($orderGoods->is_real == 1){
+            if($orderGoods->is_real == 1 && strtoupper(substr($orderGoods->goods_sn,0,5))!='AAAAA'){
                 $prices .= $orderGoods->goods_price . ',';
             }
         }
@@ -81,7 +81,7 @@ class Common {
 
         $orderGoodsAll = $orderGoodsTable->fetchAll(array('order_id'=>$orderId));
         foreach($orderGoodsAll as $orderGoods){
-            if($orderGoods->is_real == 1){
+            if($orderGoods->is_real == 1 && strtoupper(substr($orderGoods->goods_sn,0,5))!='AAAAA'){
                 $numbers .= $orderGoods->goods_number . ',';
             }
         }
@@ -91,6 +91,12 @@ class Common {
     }
 
 
+    /**
+     * @param ShippingTable $shippingTable
+     * @param $shippingId
+     * @return mixed
+     * @throws \Exception
+     */
     public static function getShippingCode(ShippingTable $shippingTable,$shippingId){
         $shippingCode = $shippingTable->fetch($shippingId);
         $shippingCodeArray = array('sf_express'=>'SF','ems'=>'EMS','yto'=>'YTO');
