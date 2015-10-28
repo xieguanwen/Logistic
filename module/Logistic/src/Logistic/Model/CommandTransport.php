@@ -71,7 +71,7 @@ class CommandTransport {
         if($this->xml->getTid($response->getBody())){
             $result = true;
         } else {
-            $this->eventManager->trigger('sendOrder',null,array($this->xml->getException()->getMessage(),$this->xml->getException()->getCode()));
+            $this->eventManager->trigger('sendOrderError',null,array($orderInfo->order_id,$orderInfo->order_sn,$this->xml->getException()->getMessage(),$this->xml->getException()->getCode()));
             $result = false;
         }
         return $result;
@@ -147,9 +147,10 @@ class CommandTransport {
         	} else {
 //        		$row = $orderGoodsTable->fetchAll(array('order_id'=>$sendOrder->order_id));
 //        		$content = print_r(iterator_to_array($row),true);
-                $content = $orderInfo->order_sn;
-        		$content = $result ."\n". $content;
-        		$this->eventManager->trigger('sendOrder',null,array($content));
+
+                //$content = $orderInfo->order_sn;
+        		//$content = $result ."\n". $content;
+        		//$this->eventManager->trigger('sendOrderError',null,array($content));
         	
         		if($sendOrder->send_count >=self::SEND_COUNT) {
         			$sendOrder->status = 4;
