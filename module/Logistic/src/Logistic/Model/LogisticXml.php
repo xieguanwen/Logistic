@@ -48,7 +48,7 @@ class LogisticXml {
             if(isset($arrayXml['ERROR']))
                 $this->exception->setMessage($arrayXml['ERROR'])->setCode(10001);
             else
-                $this->exception->setMessage('其他错误')->setCode(10001);
+                $this->exception->setMessage('其他错误')->setCode(10002);
             return null;
         }
     }
@@ -63,9 +63,9 @@ class LogisticXml {
             return $arrayXml['sendorders']['sendorder']['wldh'];
         } else {
             if(isset($arrayXml['ERROR']))
-                $this->exception->setMessage($arrayXml['ERROR'])->setCode(10001);
+                $this->exception->setMessage($arrayXml['ERROR'])->setCode(20001);
             else
-                $this->exception->setMessage('其他错误')->setCode(10001);
+                $this->exception->setMessage('其他错误')->setCode(20002);
             return null;
         }
     }
