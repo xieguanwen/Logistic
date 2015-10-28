@@ -145,8 +145,9 @@ class CommandTransport {
         		}
 
         	} else {
-        		$row = $orderGoodsTable->fetchAll(array('order_id'=>$sendOrder->order_id));
-        		$content = print_r(iterator_to_array($row),true);
+//        		$row = $orderGoodsTable->fetchAll(array('order_id'=>$sendOrder->order_id));
+//        		$content = print_r(iterator_to_array($row),true);
+                $content = $orderInfo->order_sn;
         		$content = $result ."\n". $content;
         		$this->eventManager->trigger('sendOrder',null,array($content));
         	

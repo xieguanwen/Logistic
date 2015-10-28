@@ -80,7 +80,6 @@ class Receiver
         $data['pay_trade_ids'] = ' ';
         $data['pay_accounts'] = ' ';
         $data['pay_memos'] = ' ';
-        print_r($data);
         return $data;
     }
     
