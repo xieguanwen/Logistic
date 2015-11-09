@@ -67,11 +67,17 @@ class CommandTransport {
      * 发送订单信息
      */
     public function sendOrder(OrderInfo $orderInfo,OrderGoodsTable $orderGoodsTable){
-        $response = $this->sender->sendParam($this->receiver->sendOrderData($orderInfo,$orderGoodsTable), self::SEND_ORDER,'GET');
+        try{
+            $response = $this->sender->sendParam($this->receiver->sendOrderData($orderInfo,$orderGoodsTable), self::SEND_ORDER,'GET');
+        } catch (\Exception $e){
+            $this->eventManager->trigger('sendOrderError',null,array($orderInfo->order_id,$orderInfo->order_sn,$e->getMessage(),$e->getCode()));
+            return $result = false;
+        }
         if($this->xml->getTid($response->getBody())){
             $result = true;
         } else {
-            $this->eventManager->trigger('sendOrderError',null,array($orderInfo->order_id,$orderInfo->order_sn,$this->xml->getException()->getMessage(),$this->xml->getException()->getCode()));
+            $responseCollection = $this->eventManager->trigger('sendOrderError',null,array($orderInfo->order_id,$orderInfo->order_sn,$this->xml->getException()->getMessage(),$this->xml->getException()->getCode()));
+            $responseCollection->rewind();
             $result = false;
         }
         return $result;
@@ -242,7 +248,7 @@ class CommandTransport {
      * @param SendOrderTable $sendOrderTable
      */
     public function sendOrderPretreatment(OrderInfoTable $orderInfoTable,SendOrderTable $sendOrderTable){
-    	$resultSet = $orderInfoTable->fetchAll(array("pay_status=2","shipping_status=0","pay_time>".(time()-3600*24)));
+    	$resultSet = $orderInfoTable->fetchAll(array("pay_status=2","shipping_status=0","pay_time>".(time()-3600*24*2)));
     	foreach ($resultSet as $row) {
     		if ($sendOrderTable->getSendOrderByOrderId($row->order_id) == null) {
     			$sendOrder = new SendOrder();
