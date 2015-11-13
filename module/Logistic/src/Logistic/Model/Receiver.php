@@ -67,9 +67,9 @@ class Receiver
         $data['nums'] = Common::getNumbers($orderGoodsTable,$orderInfo->order_id);
         $data['receiver_name'] = $orderInfo->consignee;
         $data['receiver_address'] = $orderInfo->address;
-        $data['receiver_state'] = $this->getRegionCodeOrName($orderInfo->province);
-        $data['receiver_city'] = $this->getRegionCodeOrName($orderInfo->city);
-        $data['receiver_district'] = $this->getRegionCodeOrName($orderInfo->district);
+        $data['receiver_state'] = $this->getRegionName($orderInfo->province);
+        $data['receiver_city'] = $this->getRegionName($orderInfo->city);
+        $data['receiver_district'] = $this->getRegionName($orderInfo->district);
         $data['logistics_type'] = strtoupper(Common::getShippingCode($shippingTable,$orderInfo->shipping_id));
         $data['outer_tid'] = $orderInfo->order_sn;
         $data['outer_shop_code'] = "yxgw";
