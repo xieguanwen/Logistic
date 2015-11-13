@@ -67,9 +67,9 @@ class Receiver
         $data['nums'] = Common::getNumbers($orderGoodsTable,$orderInfo->order_id);
         $data['receiver_name'] = $orderInfo->consignee;
         $data['receiver_address'] = $orderInfo->address;
-        $data['receiver_state'] = $this->replaceState($this->getRegionName($orderInfo->province));
-        $data['receiver_city'] = $this->getRegionName($orderInfo->city);
-        $data['receiver_district'] = $this->getRegionName($orderInfo->district);
+        $data['receiver_state'] = $this->getRegionCodeOrName($orderInfo->province);
+        $data['receiver_city'] = $this->getRegionCodeOrName($orderInfo->city);
+        $data['receiver_district'] = $this->getRegionCodeOrName($orderInfo->district);
         $data['logistics_type'] = strtoupper(Common::getShippingCode($shippingTable,$orderInfo->shipping_id));
         $data['outer_tid'] = $orderInfo->order_sn;
         $data['outer_shop_code'] = "yxgw";
@@ -180,6 +180,22 @@ class Receiver
         $state = str_replace('省','',$state);
         $state = str_replace('市','',$state);
         return $state;
+    }
+
+
+    /**
+     * @param $regionId
+     * @return mixed
+     */
+    private function getRegionCodeOrName($regionId){
+        $regionTable = $this->controller->getServiceLocator()->get("Order\Model\RegionTable");
+        $row = $regionTable->fetch($regionId);
+        $result = null;
+        if($row->region_code == 0)
+            $result = $row->region_name;
+        else
+            $result = $row->region_code;
+        return $result;
     }
 }
 

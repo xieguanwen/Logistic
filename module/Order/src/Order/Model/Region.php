@@ -17,4 +17,5 @@ class Region extends Entity {
     public $region_name;
     public $region_type;
     public $agency_id;
+    public $region_code;
 }
