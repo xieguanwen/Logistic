@@ -92,7 +92,7 @@ class LogisticController extends AbstractActionController {
     public function batchreceiveshipAction(){
         $receiveOrderTable = $this->getServiceLocator()->get('Timer\Model\ReceiveOrderTable');
         $orderInfoTable = $this->getServiceLocator()->get('Order\Model\OrderInfoTable');
-        $orderGoodsTable = $this->getServiceLocator()->get('Order\Model\OrderGoodsTable');
+//        $orderGoodsTable = $this->getServiceLocator()->get('Order\Model\OrderGoodsTable');
         $this->commandTransport->receiveOrderPretreatment($orderInfoTable,$receiveOrderTable);//pretreatment
         $this->commandTransport->batchReceiveOrder($receiveOrderTable, $orderInfoTable);
         exit;
