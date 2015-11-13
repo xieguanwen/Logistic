@@ -47,7 +47,7 @@ class CommandTransport {
         if($logisticNo){
             $result = $logisticNo;
         } else {
-            $this->eventManager->trigger('sendOrderError',null,array($this->xml->getException()->getMessage(),$this->xml->getException()->getCode()));
+            $this->eventManager->trigger('receiveOrderError',null,array($this->xml->getException()->getMessage(),$this->xml->getException()->getCode()));
             $result = false;
         }
         return $result;
