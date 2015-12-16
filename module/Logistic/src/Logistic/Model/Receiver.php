@@ -51,8 +51,8 @@ class Receiver
         $stdClass->paramcompair = "=";
         $array = array();
         $array[] = $stdClass;
-        print_r(json_decode($array));exit;
-        $data['condition'] = json_decode($array); // [{"paramname":"lydh","paramvalue":"5215212022","paramcompair":"="}];
+        print_r(json_encode($array,JSON_UNESCAPED_UNICODE));exit;
+        $data['condition'] = json_encode($array); // [{"paramname":"lydh","paramvalue":"5215212022","paramcompair":"="}];
         return $data;
     }
 
