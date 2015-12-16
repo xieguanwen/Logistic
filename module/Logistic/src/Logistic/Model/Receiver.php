@@ -44,7 +44,15 @@ class Receiver
 //        $data['condition'] = 'DJBH='.$orderInfo->order_sn;
 //        $data['condition'] = "DJBH='DD00034320'";
 //        $data['condition'] = "lydh='2015081791966'";
-        $data['condition'] = "lydh='".$orderInfo->order_sn."'";
+//        $data['condition'] = "lydh='".$orderInfo->order_sn."'";
+        $stdClass = new \stdClass();
+        $stdClass->paramname = "lydh";
+        $stdClass->paramvalue = $orderInfo->order_sn;
+        $stdClass->paramcompair = "=";
+        $array = array();
+        $array[] = $stdClass;
+        print_r(json_decode($array));exit;
+        $data['condition'] = json_decode($array); // [{"paramname":"lydh","paramvalue":"5215212022","paramcompair":"="}];
         return $data;
     }
 

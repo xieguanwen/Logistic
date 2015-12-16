@@ -17,9 +17,9 @@ class Sender {
     const HOST = '121.199.173.254';
     const PORT = '30002';
     const SCHEME = 'http';
-    const SHORT_PATH = '/xyhwcgerp/data.dpk';
+    const SHORT_PATH = '/xyhycgerp/data.dpk';
     const TOKEN = '0527CFFEA6504311B86858993CF0F1F1';
-    
+
     public function __construct(){
         $this->uri = new Uri();
 //         $this->curl = new Curl();   
