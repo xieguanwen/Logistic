@@ -59,14 +59,19 @@ class LogisticXml {
      */
     public function getWldh($stringXml){
         $arrayXml = $this->readerXml->fromString($stringXml);
-        if(isset($arrayXml['sendorders']['sendorder']['wldh']) && strlen($arrayXml['sendorders']['sendorder']['wldh'])>0){
-            return $arrayXml['sendorders']['sendorder']['wldh'];
-        } else {
-            if(isset($arrayXml['ERROR']))
-                $this->exception->setMessage($arrayXml['ERROR'])->setCode(20001);
-            else
-                $this->exception->setMessage('其他错误')->setCode(20002);
-            return null;
+        try{
+            if(isset($arrayXml['sendorders']['sendorder']['wldh']) && strlen($arrayXml['sendorders']['sendorder']['wldh'])>0){
+                return $arrayXml['sendorders']['sendorder']['wldh'];
+            } else {
+                if(isset($arrayXml['ERROR']))
+                    $this->exception->setMessage($arrayXml['ERROR'])->setCode(20001);
+                else
+                    $this->exception->setMessage('其他错误')->setCode(20002);
+                return null;
+            }
+        } catch(\Exception $e){
+            $this->exception->setMessage($e->getMessage())->setCode($e->getCode());
         }
+        return null;
     }
 }
