@@ -192,9 +192,9 @@ class CommandTransport {
 
                 try {
                     //get kuaidi information
-                    $client->setUri('http://www.xiaolajiao.com/kuaidi.php?com='.$receiveOrder->order_id);
-                    $client->setMethod('GET');
-                    $response = $client->send();
+//                    $client->setUri('http://www.xiaolajiao.com/kuaidi.php?com='.$receiveOrder->order_id);
+//                    $client->setMethod('GET');
+//                    $response = $client->send();
 
                     //发送短信
                     $msg = "亲爱的用户，您的手机已经由{$orderInfo->shipping_name}发出，快递单号：{$orderInfo->invoice_no}，如有任何问题请联系客服4001665678，祝您生活愉快!【小辣椒】";
