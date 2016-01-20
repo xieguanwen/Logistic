@@ -45,7 +45,11 @@ class LogisticController extends AbstractActionController {
      * 接收发货订单信息
      */
     public function receiveshipAction(){
-        
+        $orderInfoTable = $this->getServiceLocator()->get('Order\Model\OrderInfoTable');
+        $orderInfo = $orderInfoTable->fetchOne(array("order_sn"=>"2016011965855"));
+        $invoiceNo = $this->commandTransport->receiveOrder($orderInfo);
+        print_r($invoiceNo);
+        exit(0);
     }
     
     /**
