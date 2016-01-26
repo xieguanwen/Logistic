@@ -13,12 +13,14 @@ use Order\Model\OrderGoodsTable;
 use Timer\Model\SendOrderTable;
 use Timer\Model\SendOrder;
 use Zend\Http\Client;
+use Zend\Uri\Http;
 
 class CommandTransport {
     private $receiver;
     private $sender;
     private $eventManager;
     private $xml;
+    private $response;
     const SEND_COUNT = 4;
     const INVALID_ORDER = 'deposeSmSalerOrder';
     const SEND_ORDER = 'ecerp.trade.add_order_new';
@@ -43,6 +45,7 @@ class CommandTransport {
      */
     public function receiveOrder(OrderInfo $orderInfo){
         $response = $this->sender->sendParam($this->receiver->receiveOrderData($orderInfo),'ecerp.sendorder.get','GET');
+        $this->response = $response;
 //        print_r($response->getBody());exit();
         $logisticNo = $this->xml->getWldh($response->getBody());
         if($logisticNo){
@@ -291,6 +294,15 @@ class CommandTransport {
             } catch (\Exception $e){
             }
         }
+    }
+
+    /**
+     *
+     * @return Zend\Http\Response
+     */
+    public function getResponse()
+    {
+        return $this->response;
     }
     
     private function log($eventName){

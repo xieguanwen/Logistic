@@ -46,9 +46,15 @@ class LogisticController extends AbstractActionController {
      */
     public function receiveshipAction(){
         $orderInfoTable = $this->getServiceLocator()->get('Order\Model\OrderInfoTable');
-        $orderInfo = $orderInfoTable->fetchOne(array("order_sn"=>"2016011627531"));
+        $where = array();
+        if($this->getRequest()->getQuery("order_sn",null) == null){
+            $where['order_sn'] = '2016011627531';
+        } else {
+            $where['order_sn'] = $this->getRequest()->getQuery("order_sn",null);
+        }
+        $orderInfo = $orderInfoTable->fetchOne($where);
         $invoiceNo = $this->commandTransport->receiveOrder($orderInfo);
-        print_r($invoiceNo);
+        print_r($this->commandTransport->getResponse()->getBody());
         exit(0);
     }
     
