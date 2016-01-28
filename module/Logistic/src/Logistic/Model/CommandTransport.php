@@ -226,7 +226,7 @@ class CommandTransport {
         	//         	$row = new UpdateLogistic();
         	$orderInfo = $orderInfoTable->fetch($row->order_id);
         	try {
-        	    $resultInvalid = $this->sendInvalidOrder($orderInfo);
+                $resultInvalid = $this->sendInvalidOrder($orderInfo);
         	    if ($resultInvalid == 0) {
         	    	$resultSend = $this->sendOrder($orderInfo,$orderGoodsTable);
         	    	print_r($resultSend);exit;
