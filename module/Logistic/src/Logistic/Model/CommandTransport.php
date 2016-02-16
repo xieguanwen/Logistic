@@ -151,6 +151,11 @@ class CommandTransport {
         		$orderInfo->shipping_status = 3;
         		try {
         			$orderInfoTable->save($orderInfo);
+                    if($orderInfo->pay_id == 11){
+                        $client->setUri("http://www.xiaolajiao.com/api/homecredit.php?orderSn=".$orderInfo->order_sn."&appId=homecredit&appSecret=ta45098f4ce0gecf6c2e96573b4e21b3");
+                        $client->setMethod('GET');
+                        $response = $client->send();
+                    }
         		} catch (Exception $e) {
         		}
 
@@ -181,7 +186,7 @@ class CommandTransport {
         $client = new Client();
         foreach ($resultSet as $receiveOrder) {
             $orderInfo = $orderInfoTable->fetch($receiveOrder->order_id);
-            $invoiceNo = $this->receiveOrder($orderInfo,$receiveOrderTable);
+            $invoiceNo = $this->receiveOrder($orderInfo);
             if($invoiceNo !== false){
                 //改变发货状态
                 $orderInfo->shipping_status = 1;
