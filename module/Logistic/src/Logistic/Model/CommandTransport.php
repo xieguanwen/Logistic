@@ -146,11 +146,11 @@ class CommandTransport {
         		$sendOrderTable->save($sendOrder);
         	
         		//save 备货中(3)
-        		$orderInfo = new OrderInfo();
-        		$orderInfo->order_id = $sendOrder->order_id;
-        		$orderInfo->shipping_status = 3;
+        		$orderInfoNew = new OrderInfo();
+                $orderInfoNew->order_id = $sendOrder->order_id;
+                $orderInfoNew->shipping_status = 3;
         		try {
-        			$orderInfoTable->save($orderInfo);
+        			$orderInfoTable->save($orderInfoNew);
                     if($orderInfo->pay_id == 11){
                         $client->setUri("http://www.xiaolajiao.com/api/homecredit.php?orderSn=".$orderInfo->order_sn."&appId=homecredit&appSecret=ta45098f4ce0gecf6c2e96573b4e21b3");
                         $client->setMethod('GET');
