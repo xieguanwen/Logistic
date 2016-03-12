@@ -33,6 +33,7 @@ class CommandTransport {
         $this->log('sendOrderError');
         $this->log('sendOrder');
         $this->log('receiveOrder');
+        $this->log("receiveOrderId");
         $this->log('receiveOrderError');
         $this->xml = new LogisticXml();
     }
@@ -186,6 +187,7 @@ class CommandTransport {
         $client = new Client();
         foreach ($resultSet as $receiveOrder) {
             $orderInfo = $orderInfoTable->fetch($receiveOrder->order_id);
+            $this->eventManager->trigger("receiveOrderId",array("order_id"=>$orderInfo->order_id,"order_sn"=>$orderInfo->order_sn));
             $invoiceNo = $this->receiveOrder($orderInfo);
             if($invoiceNo !== false){
                 //改变发货状态
