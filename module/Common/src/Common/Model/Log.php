@@ -35,5 +35,6 @@ class Log
             $log->addWriter($writer);
             $log->info(print_r($message,true));
         }
+        $log = null;
     }
 }
