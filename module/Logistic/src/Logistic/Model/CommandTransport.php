@@ -186,6 +186,7 @@ class CommandTransport {
         $resultSet = $receiveOrderTable->fetchAll(array('status=0'));
         $client = new Client();
         foreach ($resultSet as $receiveOrder) {
+            sleep(30);
             $orderInfo = $orderInfoTable->fetch($receiveOrder->order_id);
             $this->eventManager->trigger("receiveOrderId",null,array("order_id"=>$orderInfo->order_id,"order_sn"=>$orderInfo->order_sn));
             $invoiceNo = $this->receiveOrder($orderInfo);
