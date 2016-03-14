@@ -57,6 +57,32 @@ class LogisticController extends AbstractActionController {
         print_r($this->commandTransport->getResponse()->getBody());
         exit(0);
     }
+
+    public function receiveShippingAction(){
+        $orderInfoTable = $this->getServiceLocator()->get('Order\Model\OrderInfoTable');
+        $receiveOrderTable = $this->getServiceLocator()->get('Timer\Model\ReceiveOrderTable');
+        $where = array();
+        $where['order_sn'] = $this->getRequest()->getQuery("order_sn",null);
+        $orderInfo = $orderInfoTable->fetchOne($where);
+
+        $receiveOrder = $receiveOrderTable->fetch($orderInfo->order_id);
+        if($receiveOrder->status == 0){
+            $invoiceNo = $this->commandTransport->receiveOrder($orderInfo);
+            if($invoiceNo){
+                $this->commandTransport->changeOrder($orderInfo,$orderInfoTable,$invoiceNo);
+                $this->commandTransport->changeReceiveStatus($receiveOrder,$receiveOrderTable);
+                $this->commandTransport->sendSms($orderInfo);
+                $this->commandTransport->sendKuaiDi($orderInfo);
+            }
+        }
+
+        $invoiceNo = $this->commandTransport->receiveOrder($orderInfo);
+        print_r($this->commandTransport->getResponse()->getBody());
+        exit(0);
+    }
+
+
+
     
     /**
      * 发送订单信息

@@ -317,4 +317,60 @@ class CommandTransport {
             Log::file('./data/log/logistic', date("Y-m-d",time()).$e->getName().'.txt', print_r($e->getParams(),true));
         });
     }
+
+    /**
+     * @param OrderInfo $orderInfo
+     * @param OrderInfoTable $orderInfoTable
+     * @param $invoiceNo
+     * @throws \Exception
+     */
+    public function changeOrder(OrderInfo $orderInfo,OrderInfoTable $orderInfoTable,$invoiceNo){
+        //改变发货状态
+        $orderInfo->shipping_status = 1;
+        $orderInfo->invoice_no = $invoiceNo;
+        $orderInfoTable->save($orderInfo);
+    }
+
+    /**
+     * @param ReceiveOrder $receiveOrder
+     * @param ReceiveOrderTable $receiveOrderTable
+     * @throws \Exception
+     */
+    public function changeReceiveStatus(ReceiveOrder $receiveOrder,ReceiveOrderTable $receiveOrderTable){
+        //save receive success
+        $receiveOrder->status = 1;
+        $receiveOrder->count = $receiveOrder->count + 1;
+        $receiveOrderTable->save($receiveOrder);
+    }
+
+    /**
+     * @param OrderInfo $orderInfo
+     */
+    public function sendSms(OrderInfo $orderInfo){
+        $client = new Client();
+        try {
+            //发送短信
+            $msg = "亲爱的用户，您的手机已经由{$orderInfo->shipping_name}发出，快递单号：{$orderInfo->invoice_no}，如有任何问题请联系客服4001665678，祝您生活愉快!【小辣椒】";
+            $url = "http://www.xiaolajiao.com/sendsms.php?mobile={$orderInfo->mobile}&applicationkey=smskey&msg={$msg}";
+            $client->setUri($url);
+            $client->send();
+        } catch (Exception $e) {
+            $this->eventManager->trigger('receiveOrderError',null,$e);
+        }
+    }
+
+    /**
+     * @param OrderInfo $orderInfo
+     */
+    public function sendKuaiDi(OrderInfo $orderInfo){
+        $client = new Client();
+        try {
+            //get kuaidi information
+            $client->setUri('http://www.xiaolajiao.com/kuaidi.php?com='.$orderInfo->order_id);
+            $client->setMethod('GET');
+            $response = $client->send();
+        } catch (Exception $e) {
+            $this->eventManager->trigger('receiveOrderError',null,$e);
+        }
+    }
 }
