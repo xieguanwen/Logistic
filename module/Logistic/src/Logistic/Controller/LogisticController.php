@@ -73,11 +73,12 @@ class LogisticController extends AbstractActionController {
                 $this->commandTransport->changeReceiveStatus($receiveOrder,$receiveOrderTable);
                 $this->commandTransport->sendSms($orderInfo);
                 $this->commandTransport->sendKuaiDi($orderInfo);
+                print_r("物流号：".$invoiceNo);
             }
+        } elseif($receiveOrder->status == 1){
+            print_r("已经接收过了");
         }
-
-        $invoiceNo = $this->commandTransport->receiveOrder($orderInfo);
-        print_r($this->commandTransport->getResponse()->getBody());
+        print_r("没有成功");
         exit(0);
     }
 
