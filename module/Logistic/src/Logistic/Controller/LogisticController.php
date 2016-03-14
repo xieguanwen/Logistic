@@ -77,8 +77,9 @@ class LogisticController extends AbstractActionController {
             }
         } elseif($receiveOrder->status == 1){
             print_r("已经接收过了");
+        } else {
+            print_r("没有成功");
         }
-        print_r("没有成功");
         exit(0);
     }
 
