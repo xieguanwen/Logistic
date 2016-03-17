@@ -68,7 +68,8 @@ class LogisticController extends AbstractActionController {
         $receiveOrder = $receiveOrderTable->fetchOne(array("order_id"=>$orderInfo->order_id));
         if($receiveOrder->status == 0){
             $invoiceNo = $this->commandTransport->receiveOrder($orderInfo);
-            print_r($this->commandTransport->getResponse()->getBody());
+//            print_r($this->commandTransport->getResponse()->getBody());
+            var_dump($invoiceNo);
             if($invoiceNo){
                 $this->commandTransport->changeOrder($orderInfo,$orderInfoTable,$invoiceNo);
                 $this->commandTransport->changeReceiveStatus($receiveOrder,$receiveOrderTable);
