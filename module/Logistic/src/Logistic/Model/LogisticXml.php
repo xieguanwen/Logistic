@@ -64,9 +64,7 @@ class LogisticXml
     {
         $arrayXml = $this->readerXml->fromString($stringXml);
         try {
-            print_r($arrayXml['sendorders']['sendorder']);
-            count($arrayXml['sendorders']['sendorder']) >=2 ? print_r("ok"):print_r("no");
-            if (isset($arrayXml['sendorders']['sendorder']) && count($arrayXml['sendorders']['sendorder']) >= 2) {
+            if (isset($arrayXml['sendorders']['sendorder'][0]) && !isset($arrayXml['sendorders']['sendorder']['wldh'])) {
                 return $arrayXml['sendorders']['sendorder'][0]['wldh'];
             } else {
                 if (isset($arrayXml['sendorders']['sendorder']['wldh']) && strlen($arrayXml['sendorders']['sendorder']['wldh']) > 0) {
