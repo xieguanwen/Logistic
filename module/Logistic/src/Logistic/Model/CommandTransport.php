@@ -49,6 +49,7 @@ class CommandTransport {
         $this->response = $response;
 //        print_r($response->getBody());exit();
         $logisticNo = $this->xml->getWldh($response->getBody());
+        print_r($logisticNo);exit;
         if($logisticNo){
             $result = $logisticNo;
         } else {
