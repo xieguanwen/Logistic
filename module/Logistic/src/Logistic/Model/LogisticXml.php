@@ -63,6 +63,7 @@ class LogisticXml
     public function getWldh($stringXml)
     {
         $arrayXml = $this->readerXml->fromString($stringXml);
+        print_r($arrayXml);
         try {
             if (isset($arrayXml['sendorders']['sendorder']) && count($arrayXml['sendorders']['sendorder']) >= 2) {
                 return $arrayXml['sendorders']['sendorder'][0]['wldh'];
