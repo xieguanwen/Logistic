@@ -97,6 +97,7 @@ class LogisticController extends AbstractActionController {
         if ($this->getRequest()->getQuery('order_sn')) {
             $orderInfo = $orderInfoTable->fetchOne(array('order_sn'=>$this->getRequest()->getQuery('order_sn')));
             $result = $this->commandTransport->sendOrder($orderInfo, $orderGoodsTable);
+            print_r($this->commandTransport->getResponse()->getBody());
             if ($result) {
             	echo '发送成功';
             } else {
