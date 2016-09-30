@@ -23,7 +23,7 @@ class Common {
         $orderGoodsAll = $orderGoodsTable->fetchAll(array('order_id'=>$orderId));
         foreach($orderGoodsAll as $orderGoods){
             if($orderGoods->is_real == 1 && strtoupper(substr($orderGoods->goods_sn,0,5))!='AAAAA')
-                $itemsns .= $orderGoods->goods_sn . ',';
+                $itemsns .= ltrim($orderGoods->goods_sn,'-') . ',';
         }
 
         $itemsns = rtrim($itemsns,',');
@@ -44,7 +44,7 @@ class Common {
         foreach($orderGoodsAll as $orderGoods){
             if($orderGoods->is_real == 1 && strtoupper(substr($orderGoods->goods_sn,0,5))!='AAAAA'){
                 $product = $productTable->fetch($orderGoods->product_id);
-                $itemsns .= $product->product_sn . ',';
+                $itemsns .= ltrim($product->product_sn,'-') . ',';
             }
         }
 
