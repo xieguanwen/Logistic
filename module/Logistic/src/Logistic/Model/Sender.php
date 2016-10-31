@@ -72,6 +72,9 @@ class Sender {
             $this->client->setParameterPost($param);
         }
 
+        print_r($this->client->getUri()->toString());
+//        print_r($this->client->getRequest()->getQuery());
+        exit;
 //        print_r($this->client->getRequest()->getQuery());exit;
         $response = $this->client->send();
         return $response;
