@@ -70,7 +70,6 @@ class Sender {
         }
 //        print_r($this->client->getRequest()->getQuery());exit;
         $response = $this->client->send();
-        print_r($response->getBody());exit;
         return $response;
     }
     
