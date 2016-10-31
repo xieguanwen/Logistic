@@ -68,6 +68,7 @@ class Sender {
         } else {
             $this->client->setParameterGet($param);
         }
+        print_r($param);
         print_r($this->client->getUri()->toString());
         print_r($this->client->getRequest()->getQuery());exit;
 //        print_r($this->client->getRequest()->getQuery());exit;
@@ -84,6 +85,7 @@ class Sender {
 //        $queryParam = array('method'=>$methodName,'appkey'=>self::TOKEN);
         $queryParam = array('method'=>$methodName);
         $queryParam['timeSpan']=time();
+        print_r(json_encode($param).self::TOKEN);
         $queryParam['sign']=base64_encode(md5(json_encode($param).self::TOKEN));
         $this->uri  ->setHost(self::HOST)
                     ->setScheme(self::SCHEME)
