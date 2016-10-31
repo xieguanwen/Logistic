@@ -59,6 +59,9 @@ class Sender {
      * @return \Zend\Http\Response
      */
     public function sendParam($param,$methodName,$method = 'POST', $headers = null){
+        print_r($param);
+        print_r($methodName);
+        exit;
         $this->setUrl($methodName);
         $this->client->setUri($this->uri->toString());
         $this->client->setMethod($method);
