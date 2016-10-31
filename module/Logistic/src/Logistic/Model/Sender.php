@@ -70,11 +70,9 @@ class Sender {
 //        }
         if($method == 'POST'){
             $this->client->setParameterPost($param);
+        } else {
+            $this->client->setParameterGet($param);
         }
-
-        print_r($this->client->getUri()->toString());
-//        print_r($this->client->getRequest()->getQuery());
-        exit;
 //        print_r($this->client->getRequest()->getQuery());exit;
         $response = $this->client->send();
         return $response;
@@ -89,9 +87,7 @@ class Sender {
 //        $queryParam = array('method'=>$methodName,'appkey'=>self::TOKEN);
         $queryParam = array('method'=>$methodName);
         $queryParam['timeSpan']=time();
-        $queryParam['condition']='['.json_encode($param).']';
-        print_r($queryParam['condition']);exit;
-        $queryParam['sign']=base64_encode(md5($queryParam['condition'].self::TOKEN));
+        $queryParam['sign']=base64_encode(md5('['.json_encode($param).']'.self::TOKEN));
         $this->uri  ->setHost(self::HOST)
                     ->setScheme(self::SCHEME)
                     ->setPort(self::PORT)
