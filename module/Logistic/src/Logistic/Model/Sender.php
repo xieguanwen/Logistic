@@ -59,7 +59,7 @@ class Sender {
      * @return \Zend\Http\Response
      */
     public function sendParam($param,$methodName,$method = 'POST', $headers = null){
-        $this->setUrl($methodName);
+        $this->setUrl($methodName,$param);
         $this->client->setUri($this->uri->toString());
         $this->client->setMethod($method);
         if($headers !== null) $this->client->setHeaders($headers); // $headers = array('Content-Type'=>'application/json')
@@ -78,12 +78,16 @@ class Sender {
      * customerId=143631&token=uMbYz4Dtfhj7yeokoZaMAuUUMm+h+v/h/vgnjZHyWMC1&language=zh_CN
      * @param string $methodName
      */
-    public function setUrl($methodName){
+    public function setUrl($methodName,$param){
+//        $queryParam = array('method'=>$methodName,'appkey'=>self::TOKEN);
+        $queryParam = array('method'=>$methodName);
+        $queryParam['timeSpan']=time();
+        $queryParam['sign']=base64_encode(md5(json_encode($param).self::TOKEN));
         $this->uri  ->setHost(self::HOST)
                     ->setScheme(self::SCHEME)
                     ->setPort(self::PORT)
                     ->setPath(self::SHORT_PATH)
-                    ->setQuery(array('method'=>$methodName,'appkey'=>self::TOKEN))
+                    ->setQuery($queryParam)
                     ;
         return $this;
     }

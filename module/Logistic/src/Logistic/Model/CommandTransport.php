@@ -238,7 +238,6 @@ class CommandTransport {
                 $resultInvalid = $this->sendInvalidOrder($orderInfo);
         	    if ($resultInvalid == 0) {
         	    	$resultSend = $this->sendOrder($orderInfo,$orderGoodsTable);
-        	    	print_r($resultSend);exit;
         	    	$receiveResult = $this->receiver->receive($updateLogisticTable,$row,$resultSend);
             	    if(!$receiveResult) {
                         $this->eventManager->trigger('sendOrderError',null,$row);
