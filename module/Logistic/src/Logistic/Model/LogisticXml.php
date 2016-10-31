@@ -44,7 +44,9 @@ class LogisticXml
      */
     public function getTid($stringXml)
     {
+        print_r($stringXml);
         $arrayXml = $this->readerXml->fromString($stringXml);
+        print_r($arrayXml);exit;
         if (isset($arrayXml['trade_orders_response']['trade']['tid']) && strlen($arrayXml['trade_orders_response']['trade']['tid']) > 0) {
             return $arrayXml['trade_orders_response']['trade']['tid'];
         } else {
