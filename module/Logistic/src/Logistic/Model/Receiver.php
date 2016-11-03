@@ -89,6 +89,7 @@ class Receiver
         $data['pay_accounts'] = ' ';
         $data['pay_memos'] = ' ';
         $data['add_district'] = 1;
+        $data['trade_memo'] = $orderInfo->to_buyer;
         return $data;
     }
     
