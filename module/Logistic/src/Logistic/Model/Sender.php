@@ -89,6 +89,10 @@ class Sender {
         $queryParam = array('method'=>$methodName);
         $queryParam['timeSpan']=time();
         print_r($param['condition'].self::TOKEN);
+        print_r("\n");
+        print_r(md5($param['condition'].self::TOKEN));
+        print_r("\n");
+        print_r(base64_encode(md5($param['condition'].self::TOKEN)));
         $queryParam['sign']=base64_encode(md5($param['condition'].self::TOKEN));
         $this->uri  ->setHost(self::HOST)
             ->setScheme(self::SCHEME)
@@ -98,7 +102,8 @@ class Sender {
 
 //        $url = $this->uri->toString();
 //        $url = $url . "&condition={$param['condition']}";
-//        print_r($url);
+        print_r($this->uri->toString());
+        print_r("\n");
         $this->client->setUri($this->uri->toString());
         $this->client->setMethod($method);
         if($headers !== null) $this->client->setHeaders($headers); // $headers = array('Content-Type'=>'application/json')
