@@ -89,6 +89,7 @@ class Sender {
         $this->setUrl($methodName,$param);
         $url = $this->uri->toString();
         $url = $url . "&condition={$param['condition']}";
+        print_r($url);exit;
         $this->client->setUri($url);
         $this->client->setMethod($method);
         if($headers !== null) $this->client->setHeaders($headers); // $headers = array('Content-Type'=>'application/json')
