@@ -60,6 +60,7 @@ class Sender {
      */
     public function sendParam($param,$methodName,$method = 'POST', $headers = null){
         $this->setUrl($methodName,$param);
+        print_r($this->uri->toString());
         $this->client->setUri($this->uri->toString());
         $this->client->setMethod($method);
         if($headers !== null) $this->client->setHeaders($headers); // $headers = array('Content-Type'=>'application/json')
