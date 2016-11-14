@@ -60,7 +60,6 @@ class Sender {
      */
     public function sendParam($param,$methodName,$method = 'POST', $headers = null){
         $this->setUrl($methodName,$param);
-        print_r($this->uri->toString());
         $this->client->setUri($this->uri->toString());
         $this->client->setMethod($method);
         if($headers !== null) $this->client->setHeaders($headers); // $headers = array('Content-Type'=>'application/json')
@@ -74,11 +73,11 @@ class Sender {
         } else {
             $this->client->setParameterGet($param);
         }
-//        print_r($this->client->getRequest()->getQuery());exit;
+        print_r($this->client->getRequest()->getQuery());exit;
         $response = $this->client->send();
         return $response;
     }
-    
+
     /**
      * http://113.105.67.138:8088/xyapi/api/service/wmc/order/addSmSalerOrder?
      * customerId=143631&token=uMbYz4Dtfhj7yeokoZaMAuUUMm+h+v/h/vgnjZHyWMC1&language=zh_CN
