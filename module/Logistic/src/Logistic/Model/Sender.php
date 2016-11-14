@@ -90,10 +90,10 @@ class Sender {
         $queryParam['timeSpan']=time();
         print_r($param['condition'].self::TOKEN);
         print_r("\n");
-        print_r(md5($param['condition'].self::TOKEN));
+        print_r(strtoupper(md5($param['condition'].self::TOKEN)));
         print_r("\n");
-        print_r(base64_encode(md5($param['condition'].self::TOKEN)));
-        $queryParam['sign']=base64_encode(md5($param['condition'].self::TOKEN));
+        print_r(base64_encode(strtoupper(md5($param['condition'].self::TOKEN))));
+        $queryParam['sign']=base64_encode(strtoupper(md5($param['condition'].self::TOKEN)));
         $this->uri  ->setHost(self::HOST)
             ->setScheme(self::SCHEME)
             ->setPort(self::PORT)
