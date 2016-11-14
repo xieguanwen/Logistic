@@ -73,8 +73,35 @@ class Sender {
         } else {
             $this->client->setParameterGet($param);
         }
-        print_r($this->client->getUri());
-        print_r($this->client->getRequest()->getQuery());exit;
+        $response = $this->client->send();
+        return $response;
+    }
+
+
+    /**
+     * @param array $param
+     * @param string $methodName
+     * @param string $method
+     * @param null $headers
+     * @return \Zend\Http\Response
+     */
+    public function sendParamReceive($param,$methodName,$method = 'POST', $headers = null){
+        $this->setUrl($methodName,$param);
+        $url = $this->uri->toString();
+        $url = $url . "&condition={$param['condition']}";
+        $this->client->setUri($url);
+        $this->client->setMethod($method);
+        if($headers !== null) $this->client->setHeaders($headers); // $headers = array('Content-Type'=>'application/json')
+//        if($method == 'POST'){
+//            $this->client->setParameterPost($param);
+//        } else {
+//            $this->client->setParameterGet($param);
+//        }
+//        if($method == 'POST'){
+//            $this->client->setParameterPost($param);
+//        } else {
+//            $this->client->setParameterGet($param);
+//        }
         $response = $this->client->send();
         return $response;
     }
