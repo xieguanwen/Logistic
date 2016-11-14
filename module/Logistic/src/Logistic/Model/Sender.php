@@ -116,6 +116,7 @@ class Sender {
 //        $queryParam = array('method'=>$methodName,'appkey'=>self::TOKEN);
         $queryParam = array('method'=>$methodName);
         $queryParam['timeSpan']=time();
+        print_r('['.json_encode($param).']'.self::TOKEN);
         $queryParam['sign']=base64_encode(md5('['.json_encode($param).']'.self::TOKEN));
         $this->uri  ->setHost(self::HOST)
                     ->setScheme(self::SCHEME)
