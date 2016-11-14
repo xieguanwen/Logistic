@@ -86,7 +86,16 @@ class Sender {
      * @return \Zend\Http\Response
      */
     public function sendParamReceive($param,$methodName,$method = 'POST', $headers = null){
-        $this->setUrl($methodName,$param);
+        $queryParam = array('method'=>$methodName);
+        $queryParam['timeSpan']=time();
+        print_r('[{condition:'.$param['condition'].'}]'.self::TOKEN);
+        $queryParam['sign']=base64_encode(md5('[{condition:'.$param['condition'].'}]'.self::TOKEN));
+        $this->uri  ->setHost(self::HOST)
+            ->setScheme(self::SCHEME)
+            ->setPort(self::PORT)
+            ->setPath(self::SHORT_PATH)
+            ->setQuery($queryParam);
+
         $url = $this->uri->toString();
         $url = $url . "&condition={$param['condition']}";
         print_r($url);exit;
