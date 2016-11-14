@@ -88,7 +88,7 @@ class Sender {
     public function sendParamReceive($param,$methodName,$method = 'POST', $headers = null){
         $queryParam = array('method'=>$methodName);
         $queryParam['timeSpan']=time();
-        print_r('[{"condition":'.$param['condition'].'}]'.self::TOKEN);
+        print_r($param['condition'].self::TOKEN);
         $queryParam['sign']=base64_encode(md5($param['condition'].self::TOKEN));
         $this->uri  ->setHost(self::HOST)
             ->setScheme(self::SCHEME)
