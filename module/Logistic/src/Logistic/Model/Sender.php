@@ -87,28 +87,45 @@ class Sender {
      */
     public function sendParamReceive($param,$methodName,$method = 'POST', $headers = null){
         $queryParam = array('method'=>$methodName);
-        $queryParam['timeSpan']=time();
-        print_r($param['condition'].self::TOKEN);
-        print_r("\n");
-        print_r(strtoupper(md5($param['condition'].self::TOKEN)));
-        print_r("\n");
+
+//        $queryParam['timeSpan']=time();
+//        print_r($param['condition'].self::TOKEN);
+//        print_r("\n");
+//        print_r(strtoupper(md5($param['condition'].self::TOKEN)));
+//        print_r("\n");
+
 //        print_r(base64_encode(strtoupper(md5($param['condition'].self::TOKEN))));
 
-        $md5 = strtoupper(md5($param['condition'].self::TOKEN));
-        $md5New = '';
-        for($i=0;$i<strlen($md5);$i = $i+1){
-            if($i>0 && $i%2==0){
-                $md5New = $md5New.'-';
-            }
-            $md5New = $md5New.$md5[$i];
-        }
-        $md5New = rtrim($md5New,'-');
-        print_r($md5New);
-        print_r("\n");
-        print_r(base64_encode($md5New));
-        print_r("\n");
+//        $md5 = strtoupper(md5($param['condition'].self::TOKEN));
+//        $md5New = '';
+//        for($i=0;$i<strlen($md5);$i = $i+1){
+//            if($i>0 && $i%2==0){
+//                $md5New = $md5New.'-';
+//            }
+//            $md5New = $md5New.$md5[$i];
+//        }
+//        $md5New = rtrim($md5New,'-');
+//
+//
+//        //$str_md5 这个是MD5过后的字符
 
-        $queryParam['sign']=base64_encode($md5New);
+        $str_md5 = strtoupper(md5($param['condition'].self::TOKEN));
+        $int_len = strlen($str_md5)/2;
+        $str_sign = '';
+        for($i=0;$i<$int_len;$i++) {
+            $str_sign .= chr(hexdec(substr($str_md5,$i*2,2)));
+        }
+        $str_sign=base64_encode($str_sign);
+        //$str_sign = 'nzs8W71a3cOlGQq50qcVkQ==';
+        $str_url = '&page_size=20&page_no=1&sign='.urlencode($str_sign).'&timeSpan='.time();
+
+
+//        print_r($md5New);
+//        print_r("\n");
+//        print_r(base64_encode($md5New));
+//        print_r("\n");
+
+//        $queryParam['sign']=base64_encode($md5New);
         $this->uri  ->setHost(self::HOST)
             ->setScheme(self::SCHEME)
             ->setPort(self::PORT)
@@ -117,9 +134,9 @@ class Sender {
 
 //        $url = $this->uri->toString();
 //        $url = $url . "&condition={$param['condition']}";
-        print_r($this->uri->toString());
+        print_r($this->uri->toString().$str_url);
         print_r("\n");
-        $this->client->setUri($this->uri->toString());
+        $this->client->setUri($this->uri->toString().$str_url);
         $this->client->setMethod($method);
         if($headers !== null) $this->client->setHeaders($headers); // $headers = array('Content-Type'=>'application/json')
 //        if($method == 'POST'){
