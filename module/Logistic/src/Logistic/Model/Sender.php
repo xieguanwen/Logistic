@@ -96,11 +96,10 @@ class Sender {
         for($i=0;$i<$int_len;$i++) {
             $str_sign .= chr(hexdec(substr($str_md5,$i*2,2)));
         }
-        print_r($str_sign);
+
         $str_sign=base64_encode($str_sign);
         //$str_sign = 'nzs8W71a3cOlGQq50qcVkQ==';
         $str_url = '&page_size=20&page_no=1&sign='.urlencode($str_sign).'&timeSpan='.time();
-
 
         $this->uri  ->setHost(self::HOST)
             ->setScheme(self::SCHEME)
@@ -108,18 +107,10 @@ class Sender {
             ->setPath(self::SHORT_PATH)
             ->setQuery($queryParam);
 
-//        $url = $this->uri->toString();
-//        $url = $url . "&condition={$param['condition']}";
-        print_r($this->uri->toString().$str_url);
-        print_r("\n");
         $this->client->setUri($this->uri->toString().$str_url);
         $this->client->setMethod($method);
         if($headers !== null) $this->client->setHeaders($headers); // $headers = array('Content-Type'=>'application/json')
-//        if($method == 'POST'){
-//            $this->client->setParameterPost($param);
-//        } else {
-//            $this->client->setParameterGet($param);
-//        }
+
         if($method == 'POST'){
             $this->client->setParameterPost($param);
         } else {
