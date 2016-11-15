@@ -97,10 +97,10 @@ class Sender {
         $md5 = strtoupper(md5($param['condition'].self::TOKEN));
         $md5New = '';
         for($i=0;$i<strlen($md5);$i = $i+1){
-            $md5New = $md5New.$md5[$i];
             if($i>0 && $i%2==0){
                 $md5New = $md5New.'-';
             }
+            $md5New = $md5New.$md5[$i];
         }
         $md5New = rtrim($md5New,'-');
         print_r($md5New);
