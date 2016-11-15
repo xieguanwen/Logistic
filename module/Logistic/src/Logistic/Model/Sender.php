@@ -88,11 +88,8 @@ class Sender {
     public function sendParamReceive($param,$methodName,$method = 'POST', $headers = null){
         $queryParam = array('method'=>$methodName);
         $queryParam['timeSpan']=time();
-        print_r($param['condition'].self::TOKEN);
-        print_r("\n");
-        print_r(strtoupper(md5($param['condition'].self::TOKEN)));
-        print_r("\n");
-        print_r(base64_encode(strtoupper(md5($param['condition'].self::TOKEN))));
+        $queryParam['page_no']=1;
+        $queryParam['page_size']=20;
 
         $md5 = strtoupper(md5($param['condition'].self::TOKEN));
         $md5New = '';
@@ -104,7 +101,7 @@ class Sender {
         }
         $md5New = rtrim($md5New,'-');
         print_r($md5New);
-        print_r(base64_encode($md5New));
+        print_r(urlencode(base64_encode($md5New)));
 
         $queryParam['sign']=urldecode(base64_encode($md5New));
         $this->uri  ->setHost(self::HOST)
