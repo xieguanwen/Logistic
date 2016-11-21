@@ -51,7 +51,7 @@ class CommandTransport {
         if($logisticNo){
             $result = $logisticNo;
         } else {
-            $this->eventManager->trigger('receiveOrderError',null,array($orderInfo->order_id,$orderInfo->order_sn,$this->xml->getException()->getMessage(),$this->xml->getException()->getCode()));
+//            $this->eventManager->trigger('receiveOrderError',null,array($orderInfo->order_id,$orderInfo->order_sn,$this->xml->getException()->getMessage(),$this->xml->getException()->getCode()));
             $result = false;
         }
         return $result;
@@ -188,7 +188,7 @@ class CommandTransport {
         foreach ($resultSet as $receiveOrder) {
             sleep(3);
             $orderInfo = $orderInfoTable->fetch($receiveOrder->order_id);
-            $this->eventManager->trigger("receiveOrderId",null,array("order_id"=>$orderInfo->order_id,"order_sn"=>$orderInfo->order_sn));
+//            $this->eventManager->trigger("receiveOrderId",null,array("order_id"=>$orderInfo->order_id,"order_sn"=>$orderInfo->order_sn));
             $invoiceNo = $this->receiveOrder($orderInfo);
             if($invoiceNo !== false){
                 //改变发货状态
@@ -214,7 +214,7 @@ class CommandTransport {
                     $client->send();
 
                 } catch (Exception $e) {
-                    $this->eventManager->trigger('receiveOrderError',null,$e);
+//                    $this->eventManager->trigger('receiveOrderError',null,$e);
                 }
             } else {
                 //save receive fault
