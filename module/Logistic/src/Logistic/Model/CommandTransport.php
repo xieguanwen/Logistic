@@ -286,7 +286,7 @@ class CommandTransport {
      * @param ReceiveOrderTable $receiveOrderTable
      */
     public function receiveOrderPretreatment(OrderInfoTable $orderInfoTable,ReceiveOrderTable $receiveOrderTable){
-        $resultSet = $orderInfoTable->fetchAll(array('pay_status=2','shipping_status=3','pay_time>'.(time()-3600*24*30)));
+        $resultSet = $orderInfoTable->fetchAll(array('pay_status=2','shipping_status=3','pay_time>'.(time()-3600*24*3)));
         foreach ($resultSet as $row) {
             try{
                 $receiveOrderTable->fetchOne(array('order_id'=>$row->order_id));
