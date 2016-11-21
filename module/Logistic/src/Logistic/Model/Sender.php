@@ -108,6 +108,7 @@ class Sender {
             ->setQuery($queryParam);
 
         $this->client->setUri($this->uri->toString().$str_url);
+        print_r($this->uri->toString().$str_url);exit;
         $this->client->setMethod($method);
         if($headers !== null) $this->client->setHeaders($headers); // $headers = array('Content-Type'=>'application/json')
 
