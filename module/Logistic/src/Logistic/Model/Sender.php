@@ -117,7 +117,7 @@ class Sender {
         } else {
             $this->client->setParameterGet($param);
         }
-        print_r($this->client->getRequest()->getQuery());exit;
+        print_r($this->client->getRequest()->getQuery());
         $response = $this->client->send();
         return $response;
     }
