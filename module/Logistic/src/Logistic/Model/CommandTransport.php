@@ -47,8 +47,6 @@ class CommandTransport {
     public function receiveOrder(OrderInfo $orderInfo){
         $response = $this->sender->sendParamReceive($this->receiver->receiveOrderData($orderInfo),'ecerp.sendorder.get','GET');
         $this->response = $response;
-        print_r($response->getBody());
-        exit;
         $logisticNo = $this->xml->getWldh($response->getBody());
         if($logisticNo){
             $result = $logisticNo;
