@@ -196,6 +196,7 @@ class CommandTransport {
                 //改变发货状态
                 $orderInfo->shipping_status = 1;
                 $orderInfo->invoice_no = $invoiceNo;
+                $orderInfo->shipping_time = intval(time());
                 $orderInfoTable->save($orderInfo);
 
                 //save receive success
