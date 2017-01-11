@@ -96,12 +96,16 @@ class LogisticController extends AbstractActionController {
         $orderGoodsTable = $this->getServiceLocator()->get('Order\Model\OrderGoodsTable');
         if ($this->getRequest()->getQuery('order_sn')) {
             $orderInfo = $orderInfoTable->fetchOne(array('order_sn'=>$this->getRequest()->getQuery('order_sn')));
-            $result = $this->commandTransport->sendOrder($orderInfo, $orderGoodsTable);
-            print_r($this->commandTransport->getResponse()->getBody());
-            if ($result) {
-            	echo '发送成功';
+            if(isset($orderInfo->order_id)){
+                $result = $this->commandTransport->sendOrder($orderInfo, $orderGoodsTable);
+                print_r($this->commandTransport->getResponse()->getBody());
+                if ($result) {
+                    echo '发送成功';
+                } else {
+                    echo '没有发送成功,请查看日志';
+                }
             } else {
-                echo '没有发送成功,请查看日志';
+                echo '没有读出订单对象';
             }
         }
         exit;
