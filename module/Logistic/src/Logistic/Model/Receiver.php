@@ -71,10 +71,10 @@ class Receiver
         $data['mail'] = 'hyly0922';
         $data['itemsns'] = Common::getItemsns($orderGoodsTable,$orderInfo->order_id);
         $data['skusns'] = Common::getSkusns($orderGoodsTable,$productTable,$orderInfo->order_id);
+        print_r($data);exit(0);
 //        $data['itemsns'] = 'ICNL600';
         $data['prices'] = Common::getPrices($orderGoodsTable,$orderInfo->order_id);
         $data['nums'] = Common::getNumbers($orderGoodsTable,$orderInfo->order_id);
-        print_r($data);exit(0);
         $data['receiver_name'] = $orderInfo->consignee;
         $data['receiver_address'] = $orderInfo->address;
         $data['receiver_state'] = $this->getRegionName($orderInfo->province);
