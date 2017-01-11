@@ -70,7 +70,6 @@ class Receiver
 
         $data['mail'] = 'hyly0922';
         $data['itemsns'] = Common::getItemsns($orderGoodsTable,$orderInfo->order_id);
-        print_r($data);exit(0);
         $data['skusns'] = Common::getSkusns($orderGoodsTable,$productTable,$orderInfo->order_id);
 //        $data['itemsns'] = 'ICNL600';
         $data['prices'] = Common::getPrices($orderGoodsTable,$orderInfo->order_id);
@@ -92,7 +91,6 @@ class Receiver
         $data['pay_memos'] = ' ';
         $data['add_district'] = 1;
         $data['trade_memo'] = $orderInfo->to_buyer;
-        print_r($data);exit(0);
         return $data;
     }
     

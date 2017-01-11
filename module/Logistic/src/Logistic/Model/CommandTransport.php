@@ -76,7 +76,6 @@ class CommandTransport {
         try{
             $response = $this->sender->sendParam($this->receiver->sendOrderData($orderInfo,$orderGoodsTable), self::SEND_ORDER,'GET');
             $this->response = $response;
-            print_r($response->getBody());exit;
         } catch (\Exception $e){
             $this->eventManager->trigger('sendOrderError',null,array($orderInfo->order_id,$orderInfo->order_sn,$e->getMessage(),$e->getCode()));
             return $result = false;
