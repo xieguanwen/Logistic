@@ -74,6 +74,7 @@ class Receiver
 //        $data['itemsns'] = 'ICNL600';
         $data['prices'] = Common::getPrices($orderGoodsTable,$orderInfo->order_id);
         $data['nums'] = Common::getNumbers($orderGoodsTable,$orderInfo->order_id);
+        print_r($data);exit(0);
         $data['receiver_name'] = $orderInfo->consignee;
         $data['receiver_address'] = $orderInfo->address;
         $data['receiver_state'] = $this->getRegionName($orderInfo->province);
